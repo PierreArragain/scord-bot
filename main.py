@@ -14,19 +14,17 @@ async def on_message(message):
         return
     
     words = message.content.lower().split()
-
     for word in words:
         if word.startswith("di") or word.startswith("dy"):
-            if len(word) >= 4:
-                if word[2] in ("n", "m") and word[3] in ("a", "e", "i", "o", "u", "y"):
+            if len(word) >= 4 and word[2] in ("n", "m"):
+                if word[3] in ("a", "e", "i", "o", "u", "y"):
                     response = word[2:]
                 else:
-                    return
+                    break
             else:
                 response = word[2:]
-
             if response:
                 await message.channel.send(response)
-            break
+                break
 
 client.run(settings.TOKEN)
