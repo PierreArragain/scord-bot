@@ -17,17 +17,19 @@ def char_is_n_or_m(char):
     return char in ("n", "m")
 
 
-def return_response_if_word_starts_with_di_or_dy(word):
-    if word_starts_with_di_or_dy(word):
-        if len(word) >= 4 and char_is_n_or_m(word[2]):
-            if char_is_vowel(word[3]):
-                return word[2:]
-            else:
-                return None
-        else:
+def remove_prefix_if_conditions_met(word):
+    if len(word) >= 4 and char_is_n_or_m(word[2]):
+        if char_is_vowel(word[3]):
             return word[2:]
-    else:
-        return None
+        else:
+            return None
+    return word[2:]
+
+
+def return_end_of_word(word):
+    if word_starts_with_di_or_dy(word):
+        return remove_prefix_if_conditions_met(word)
+    return None
 
 
 @client.event
@@ -42,11 +44,10 @@ async def on_message(message):
 
     words = message.content.lower().split()
     for word in words:
-        response = return_response_if_word_starts_with_di_or_dy(word)
-        if response:
+        response = return_end_of_word(word)
+        if response is not None:
+            await message.channel.send(response)
             break
-    if response:
-        await message.channel.send(response)
 
 
 client.run(settings.TOKEN)
